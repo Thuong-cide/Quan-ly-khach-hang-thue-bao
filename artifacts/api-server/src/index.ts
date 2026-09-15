@@ -1,5 +1,6 @@
 import app from "./app";
 import { logger } from "./lib/logger";
+import { runDueReminders } from "./lib/telegram";
 
 const rawPort = process.env["PORT"];
 
@@ -22,4 +23,16 @@ app.listen(port, (err) => {
   }
 
   logger.info({ port }, "Server listening");
+  void runDueReminders().then((result) => {
+    logger.info(result, "Reminder sweep completed");
+  }).catch((err) => {
+    logger.error({ err }, "Reminder sweep failed");
+  });
+  setInterval(() => {
+    void runDueReminders().then((result) => {
+      logger.info(result, "Reminder sweep completed");
+    }).catch((err) => {
+      logger.error({ err }, "Reminder sweep failed");
+    });
+  }, 86_400_000);
 });

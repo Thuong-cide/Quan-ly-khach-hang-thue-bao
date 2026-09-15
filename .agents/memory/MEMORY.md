@@ -1,0 +1,2 @@
+- [OpenAPI codegen naming](openapi-codegen-naming.md) — response component names must avoid operation-derived names to prevent generated Zod export collisions.
+- [Workspace DOM types](workspace-dom-types.md) — generated fetch clients require `dom.iterable` in the client library TypeScript lib list.

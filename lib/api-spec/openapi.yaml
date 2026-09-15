@@ -3,20 +3,24 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: API for customer and subscription management
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
-    description: Health operations
+  - name: dashboard
+  - name: customers
+  - name: products
+  - name: source-accounts
+  - name: subscriptions
+  - name: integrations
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,13 +28,700 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Get dashboard summary
+      responses:
+        "200":
+          description: Dashboard metrics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+  /dashboard/activity:
+    get:
+      operationId: getDashboardActivity
+      tags: [dashboard]
+      summary: Get recent activity
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 30
+            default: 8
+      responses:
+        "200":
+          description: Recent activity
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ActivityItem"
+  /customers:
+    get:
+      operationId: listCustomers
+      tags: [customers]
+      summary: List customers
+      parameters:
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 100
+      responses:
+        "200":
+          description: Customer list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Customer"
+    post:
+      operationId: createCustomer
+      tags: [customers]
+      summary: Create customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerInput"
+      responses:
+        "201":
+          description: Created customer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+  /customers/{id}:
+    get:
+      operationId: getCustomer
+      tags: [customers]
+      summary: Get customer
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: Customer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerDetail"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      operationId: updateCustomer
+      tags: [customers]
+      summary: Update customer
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerUpdate"
+      responses:
+        "200":
+          description: Updated customer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /products:
+    get:
+      operationId: listProducts
+      tags: [products]
+      summary: List products
+      responses:
+        "200":
+          description: Product list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+    post:
+      operationId: createProduct
+      tags: [products]
+      summary: Create product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductInput"
+      responses:
+        "201":
+          description: Created product
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+  /products/{id}:
+    patch:
+      operationId: updateProduct
+      tags: [products]
+      summary: Update product
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductUpdate"
+      responses:
+        "200":
+          description: Updated product
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+  /source-accounts:
+    get:
+      operationId: listSourceAccounts
+      tags: [source-accounts]
+      summary: List source accounts
+      parameters:
+        - name: productId
+          in: query
+          schema:
+            type: integer
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Source account list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SourceAccount"
+    post:
+      operationId: createSourceAccount
+      tags: [source-accounts]
+      summary: Create source account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SourceAccountInput"
+      responses:
+        "201":
+          description: Created source account
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SourceAccount"
+  /source-accounts/{id}:
+    patch:
+      operationId: updateSourceAccount
+      tags: [source-accounts]
+      summary: Update source account
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SourceAccountUpdate"
+      responses:
+        "200":
+          description: Updated source account
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SourceAccount"
+  /subscriptions:
+    get:
+      operationId: listSubscriptions
+      tags: [subscriptions]
+      summary: List subscriptions
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [all, active, expiring, expired, archived]
+            default: all
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [end_date, created_at, customer]
+            default: end_date
+      responses:
+        "200":
+          description: Subscription list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Subscription"
+    post:
+      operationId: createSubscription
+      tags: [subscriptions]
+      summary: Create subscription
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubscriptionInput"
+      responses:
+        "201":
+          description: Created subscription
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subscription"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+  /subscriptions/{id}:
+    get:
+      operationId: getSubscription
+      tags: [subscriptions]
+      summary: Get subscription
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: Subscription
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubscriptionDetail"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      operationId: updateSubscription
+      tags: [subscriptions]
+      summary: Update subscription
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubscriptionUpdate"
+      responses:
+        "200":
+          description: Updated subscription
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subscription"
+  /subscriptions/{id}/renew:
+    post:
+      operationId: renewSubscription
+      tags: [subscriptions]
+      summary: Renew subscription
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RenewalInput"
+      responses:
+        "200":
+          description: Renewed subscription
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subscription"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /subscriptions/{id}/revoke:
+    post:
+      operationId: revokeSubscription
+      tags: [subscriptions]
+      summary: Revoke subscription access
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RevokeInput"
+      responses:
+        "200":
+          description: Revoked subscription
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subscription"
+  /subscriptions/{id}/history:
+    get:
+      operationId: getSubscriptionHistory
+      tags: [subscriptions]
+      summary: Get renewal history
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: Renewal history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RenewalHistory"
+  /integrations/status:
+    get:
+      operationId: getIntegrationsStatus
+      tags: [integrations]
+      summary: Get integration status
+      responses:
+        "200":
+          description: Integration status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IntegrationStatus"
+  /webhook/telegram:
+    post:
+      operationId: telegramWebhook
+      tags: [integrations]
+      summary: Receive Telegram bot update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TelegramUpdate"
+      responses:
+        "200":
+          description: Update accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TelegramResult"
+  /reminders/run:
+    post:
+      operationId: runReminders
+      tags: [integrations]
+      summary: Run due Telegram reminders
+      responses:
+        "200":
+          description: Reminder run result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReminderRunResponse"
 components:
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
   schemas:
     HealthStatus:
       type: object
       properties:
         status:
           type: string
+      required: [status]
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+      required: [error]
+    Customer:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        contact: { type: ["string", "null"] }
+        note: { type: ["string", "null"] }
+        createdAt: { type: string, format: date-time }
+        subscriptionCount: { type: integer }
+      required: [id, name, createdAt, subscriptionCount]
+    CustomerInput:
+      type: object
+      properties:
+        name: { type: string, minLength: 1 }
+        contact: { type: ["string", "null"] }
+        note: { type: ["string", "null"] }
+      required: [name]
+    CustomerUpdate:
+      type: object
+      properties:
+        name: { type: string, minLength: 1 }
+        contact: { type: ["string", "null"] }
+        note: { type: ["string", "null"] }
+    CustomerDetail:
+      allOf:
+        - $ref: "#/components/schemas/Customer"
+        - type: object
+          properties:
+            subscriptions:
+              type: array
+              items:
+                $ref: "#/components/schemas/Subscription"
+          required: [subscriptions]
+    Product:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        defaultDurationDays: { type: ["integer", "null"] }
+        defaultPrice: { type: ["number", "null"] }
+        activeSubscriptions: { type: integer }
+        sourceAccountCount: { type: integer }
+      required: [id, name, activeSubscriptions, sourceAccountCount]
+    ProductInput:
+      type: object
+      properties:
+        name: { type: string, minLength: 1 }
+        defaultDurationDays: { type: ["integer", "null"] }
+        defaultPrice: { type: ["number", "null"] }
+      required: [name]
+    ProductUpdate:
+      type: object
+      properties:
+        name: { type: string, minLength: 1 }
+        defaultDurationDays: { type: ["integer", "null"] }
+        defaultPrice: { type: ["number", "null"] }
+    SourceAccount:
+      type: object
+      properties:
+        id: { type: integer }
+        productId: { type: integer }
+        productName: { type: string }
+        email: { type: string }
+        maxSlots: { type: integer }
+        usedSlots: { type: integer }
+        availableSlots: { type: integer }
+        expiresAt: { type: ["string", "null"], format: date }
+        note: { type: ["string", "null"] }
+      required: [id, productId, productName, email, maxSlots, usedSlots, availableSlots]
+    SourceAccountInput:
+      type: object
+      properties:
+        productId: { type: integer }
+        email: { type: string, minLength: 1 }
+        maxSlots: { type: integer, minimum: 1 }
+        expiresAt: { type: ["string", "null"], format: date }
+        note: { type: ["string", "null"] }
+      required: [productId, email, maxSlots]
+    SourceAccountUpdate:
+      type: object
+      properties:
+        email: { type: string, minLength: 1 }
+        maxSlots: { type: integer, minimum: 1 }
+        expiresAt: { type: ["string", "null"], format: date }
+        note: { type: ["string", "null"] }
+    Subscription:
+      type: object
+      properties:
+        id: { type: integer }
+        customerId: { type: integer }
+        customerName: { type: string }
+        customerContact: { type: ["string", "null"] }
+        productId: { type: integer }
+        productName: { type: string }
+        sourceAccountId: { type: ["integer", "null"] }
+        sourceAccountEmail: { type: ["string", "null"] }
+        startDate: { type: string, format: date }
+        endDate: { type: string, format: date }
+        price: { type: ["number", "null"] }
+        status:
+          type: string
+          enum: [active, expiring, expired, archived]
+        revokedAt: { type: ["string", "null"], format: date-time }
+        daysRemaining: { type: integer }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
       required:
+        - id
+        - customerId
+        - customerName
+        - productId
+        - productName
+        - startDate
+        - endDate
         - status
-
+        - daysRemaining
+        - createdAt
+        - updatedAt
+    SubscriptionInput:
+      type: object
+      properties:
+        customerId: { type: integer }
+        productId: { type: integer }
+        sourceAccountId: { type: ["integer", "null"] }
+        startDate: { type: string, format: date }
+        endDate: { type: string, format: date }
+        price: { type: ["number", "null"] }
+      required: [customerId, productId, startDate, endDate]
+    SubscriptionUpdate:
+      type: object
+      properties:
+        sourceAccountId: { type: ["integer", "null"] }
+        startDate: { type: string, format: date }
+        endDate: { type: string, format: date }
+        price: { type: ["number", "null"] }
+    SubscriptionDetail:
+      allOf:
+        - $ref: "#/components/schemas/Subscription"
+        - type: object
+          properties:
+            history:
+              type: array
+              items:
+                $ref: "#/components/schemas/RenewalHistory"
+          required: [history]
+    RenewalInput:
+      type: object
+      properties:
+        daysAdded: { type: integer, minimum: 1 }
+        amountPaid: { type: ["number", "null"] }
+        note: { type: ["string", "null"] }
+      required: [daysAdded]
+    RevokeInput:
+      type: object
+      properties:
+        note: { type: ["string", "null"] }
+    RenewalHistory:
+      type: object
+      properties:
+        id: { type: integer }
+        subscriptionId: { type: integer }
+        renewedAt: { type: string, format: date-time }
+        daysAdded: { type: integer }
+        amountPaid: { type: ["number", "null"] }
+        gapDays: { type: integer }
+        note: { type: ["string", "null"] }
+      required: [id, subscriptionId, renewedAt, daysAdded, gapDays]
+    DashboardSummary:
+      type: object
+      properties:
+        activeSubscriptions: { type: integer }
+        expiringSubscriptions: { type: integer }
+        expiredSubscriptions: { type: integer }
+        revokedSubscriptions: { type: integer }
+        totalCustomers: { type: integer }
+        totalRevenue: { type: number }
+        revenueThisMonth: { type: number }
+        statusBreakdown:
+          type: array
+          items:
+            type: object
+            properties:
+              status: { type: string }
+              count: { type: integer }
+            required: [status, count]
+        upcoming:
+          type: array
+          items:
+            $ref: "#/components/schemas/Subscription"
+      required:
+        - activeSubscriptions
+        - expiringSubscriptions
+        - expiredSubscriptions
+        - revokedSubscriptions
+        - totalCustomers
+        - totalRevenue
+        - revenueThisMonth
+        - statusBreakdown
+        - upcoming
+    ActivityItem:
+      type: object
+      properties:
+        id: { type: string }
+        type:
+          type: string
+          enum: [created, renewed, revoked, expiring]
+        title: { type: string }
+        description: { type: string }
+        timestamp: { type: string, format: date-time }
+        subscriptionId: { type: ["integer", "null"] }
+      required: [id, type, title, description, timestamp]
+    IntegrationStatus:
+      type: object
+      properties:
+        telegram:
+          type: object
+          properties:
+            configured: { type: boolean }
+            mode: { type: string }
+          required: [configured, mode]
+        aiRouter:
+          type: object
+          properties:
+            configured: { type: boolean }
+            provider: { type: string }
+          required: [configured, provider]
+      required: [telegram, aiRouter]
+    TelegramUpdate:
+      type: object
+      additionalProperties: true
+      properties:
+        update_id: { type: integer }
+        message:
+          type: ["object", "null"]
+          additionalProperties: true
+      required: [update_id]
+    TelegramResult:
+      type: object
+      properties:
+        ok: { type: boolean }
+        reply:
+          type: ["string", "null"]
+      required: [ok, reply]
+    ReminderRunResponse:
+      type: object
+      properties:
+        sent: { type: integer }
+        skipped: { type: integer }
+        configured: { type: boolean }
+      required: [sent, skipped, configured]
