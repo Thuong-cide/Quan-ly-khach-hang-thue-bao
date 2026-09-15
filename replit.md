@@ -30,6 +30,7 @@
 
 ## Architecture decisions
 
+- Ứng dụng hiện là workspace một người dùng; không triển khai vai trò nhân viên/quản lý hoặc RBAC nếu chưa có nhu cầu mới.
 - `status` được tính theo `end_date` (`active`/`expiring`/`expired`); không dùng status để cắt tài khoản thật.
 - `revoked_at` là hành động thủ công; chỉ khi có giá trị này source-account slot mới được giải phóng.
 - Gia hạn thuê bao dùng `end_date` cũ khi chưa thu hồi, hoặc ngày hiện tại khi đã thu hồi; sau gia hạn luôn reset `revoked_at`.
