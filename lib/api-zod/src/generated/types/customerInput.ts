@@ -12,5 +12,11 @@ export interface CustomerInput {
   /** @nullable */
   contact?: string | null;
   /** @nullable */
+  email?: string | null;
+  /** @nullable */
+  zalo?: string | null;
+  /** @nullable */
+  facebook?: string | null;
+  /** @nullable */
   note?: string | null;
 }

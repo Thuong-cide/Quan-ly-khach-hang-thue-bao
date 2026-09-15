@@ -37,7 +37,14 @@ async function listViews(query: { status?: string; search?: string; sort?: strin
     .innerJoin(customersTable, eq(subscriptionsTable.customerId, customersTable.id))
     .innerJoin(productsTable, eq(subscriptionsTable.productId, productsTable.id))
     .leftJoin(sourceAccountsTable, eq(subscriptionsTable.sourceAccountId, sourceAccountsTable.id))
-    .where(search ? or(ilike(customersTable.name, search), ilike(customersTable.contact, search), ilike(productsTable.name, search)) : undefined)
+    .where(search ? or(
+      ilike(customersTable.name, search),
+      ilike(customersTable.contact, search),
+      ilike(customersTable.email, search),
+      ilike(customersTable.zalo, search),
+      ilike(customersTable.facebook, search),
+      ilike(productsTable.name, search),
+    ) : undefined)
     .orderBy(query.sort === "customer" ? asc(customersTable.name) : query.sort === "created_at" ? desc(subscriptionsTable.createdAt) : asc(subscriptionsTable.endDate));
   const views = rows.map(toSubscription);
   return query.status && query.status !== "all" ? views.filter((item) => item.status === query.status) : views;

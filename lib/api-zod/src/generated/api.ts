@@ -92,6 +92,9 @@ export const ListCustomersResponseItem = zod.object({
   "id": zod.number().int(),
   "name": zod.string(),
   "contact": zod.string().nullish(),
+  "email": zod.string().email().nullish(),
+  "zalo": zod.string().nullish(),
+  "facebook": zod.string().url().nullish(),
   "note": zod.string().nullish(),
   "createdAt": zod.coerce.date(),
   "subscriptionCount": zod.number().int()
@@ -108,6 +111,9 @@ export const ListCustomersResponse = zod.array(ListCustomersResponseItem)
 export const CreateCustomerBody = zod.object({
   "name": zod.string().min(1),
   "contact": zod.string().nullish(),
+  "email": zod.string().email().nullish(),
+  "zalo": zod.string().nullish(),
+  "facebook": zod.string().url().nullish(),
   "note": zod.string().nullish()
 })
 
@@ -115,6 +121,9 @@ export const CreateCustomerResponse = zod.object({
   "id": zod.number().int(),
   "name": zod.string(),
   "contact": zod.string().nullish(),
+  "email": zod.string().email().nullish(),
+  "zalo": zod.string().nullish(),
+  "facebook": zod.string().url().nullish(),
   "note": zod.string().nullish(),
   "createdAt": zod.coerce.date(),
   "subscriptionCount": zod.number().int()
@@ -135,6 +144,9 @@ export const GetCustomerResponse = zod.object({
   "id": zod.number().int(),
   "name": zod.string(),
   "contact": zod.string().nullish(),
+  "email": zod.string().email().nullish(),
+  "zalo": zod.string().nullish(),
+  "facebook": zod.string().url().nullish(),
   "note": zod.string().nullish(),
   "createdAt": zod.coerce.date(),
   "subscriptionCount": zod.number().int()
@@ -176,6 +188,9 @@ export const UpdateCustomerParams = zod.object({
 export const UpdateCustomerBody = zod.object({
   "name": zod.string().min(1).optional(),
   "contact": zod.string().nullish(),
+  "email": zod.string().email().nullish(),
+  "zalo": zod.string().nullish(),
+  "facebook": zod.string().url().nullish(),
   "note": zod.string().nullish()
 })
 
@@ -183,6 +198,9 @@ export const UpdateCustomerResponse = zod.object({
   "id": zod.number().int(),
   "name": zod.string(),
   "contact": zod.string().nullish(),
+  "email": zod.string().email().nullish(),
+  "zalo": zod.string().nullish(),
+  "facebook": zod.string().url().nullish(),
   "note": zod.string().nullish(),
   "createdAt": zod.coerce.date(),
   "subscriptionCount": zod.number().int()

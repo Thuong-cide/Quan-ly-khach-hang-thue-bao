@@ -12,6 +12,12 @@ export interface Customer {
   /** @nullable */
   contact?: string | null;
   /** @nullable */
+  email?: string | null;
+  /** @nullable */
+  zalo?: string | null;
+  /** @nullable */
+  facebook?: string | null;
+  /** @nullable */
   note?: string | null;
   createdAt: Date;
   subscriptionCount: number;

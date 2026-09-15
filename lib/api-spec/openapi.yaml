@@ -481,6 +481,9 @@ components:
         id: { type: integer }
         name: { type: string }
         contact: { type: ["string", "null"] }
+        email: { type: ["string", "null"], format: email }
+        zalo: { type: ["string", "null"] }
+        facebook: { type: ["string", "null"], format: uri }
         note: { type: ["string", "null"] }
         createdAt: { type: string, format: date-time }
         subscriptionCount: { type: integer }
@@ -490,6 +493,9 @@ components:
       properties:
         name: { type: string, minLength: 1 }
         contact: { type: ["string", "null"] }
+        email: { type: ["string", "null"], format: email }
+        zalo: { type: ["string", "null"] }
+        facebook: { type: ["string", "null"], format: uri }
         note: { type: ["string", "null"] }
       required: [name]
     CustomerUpdate:
@@ -497,6 +503,9 @@ components:
       properties:
         name: { type: string, minLength: 1 }
         contact: { type: ["string", "null"] }
+        email: { type: ["string", "null"], format: email }
+        zalo: { type: ["string", "null"] }
+        facebook: { type: ["string", "null"], format: uri }
         note: { type: ["string", "null"] }
     CustomerDetail:
       allOf:

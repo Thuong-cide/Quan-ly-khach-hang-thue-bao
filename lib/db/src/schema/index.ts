@@ -16,6 +16,9 @@ export const customersTable = pgTable("customers", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
   contact: varchar("contact", { length: 255 }),
+  email: varchar("email", { length: 255 }),
+  zalo: varchar("zalo", { length: 255 }),
+  facebook: varchar("facebook", { length: 500 }),
   note: text("note"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });

@@ -24,13 +24,22 @@ router.get("/customers", async (req, res): Promise<void> => {
       id: customersTable.id,
       name: customersTable.name,
       contact: customersTable.contact,
+      email: customersTable.email,
+      zalo: customersTable.zalo,
+      facebook: customersTable.facebook,
       note: customersTable.note,
       createdAt: customersTable.createdAt,
       subscriptionCount: sql<number>`count(${subscriptionsTable.id})::int`,
     })
     .from(customersTable)
     .leftJoin(subscriptionsTable, eq(subscriptionsTable.customerId, customersTable.id))
-    .where(search ? or(ilike(customersTable.name, search), ilike(customersTable.contact, search)) : undefined)
+    .where(search ? or(
+      ilike(customersTable.name, search),
+      ilike(customersTable.contact, search),
+      ilike(customersTable.email, search),
+      ilike(customersTable.zalo, search),
+      ilike(customersTable.facebook, search),
+    ) : undefined)
     .groupBy(customersTable.id)
     .orderBy(asc(customersTable.name))
     .limit(query.limit ?? 100);
