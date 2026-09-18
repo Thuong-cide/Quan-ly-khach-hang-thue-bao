@@ -774,7 +774,7 @@ return customFetch<Product>(getCreateProductUrl(),
 
 export const getCreateProductMutationKey = () => ['createProduct'] as const;
 
-export const getCreateProductMutationOptions = <TError = ErrorType<unknown>,
+export const getCreateProductMutationOptions = <TError = ErrorType<BadRequestResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createProduct>>, TError,CreateProductMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
 ): UseMutationOptions<Awaited<ReturnType<typeof createProduct>>, TError,CreateProductMutationVariables, TContext> => {
 
@@ -803,13 +803,13 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
     export type CreateProductMutationResult = NonNullable<Awaited<ReturnType<typeof createProduct>>>
     export type CreateProductMutationBody = BodyType<ProductInput>
-    export type CreateProductMutationError = ErrorType<unknown>
+    export type CreateProductMutationError = ErrorType<BadRequestResponse>
     export type CreateProductMutationVariables = {data: BodyType<ProductInput>}
 
     /**
  * @summary Create product
  */
-export const useCreateProduct = <TError = ErrorType<unknown>,
+export const useCreateProduct = <TError = ErrorType<BadRequestResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createProduct>>, TError,CreateProductMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
  ): UseMutationResult<
         Awaited<ReturnType<typeof createProduct>>,
@@ -863,7 +863,7 @@ return customFetch<Product>(getUpdateProductUrl(id),
 
 export const getUpdateProductMutationKey = () => ['updateProduct'] as const;
 
-export const getUpdateProductMutationOptions = <TError = ErrorType<unknown>,
+export const getUpdateProductMutationOptions = <TError = ErrorType<BadRequestResponse | NotFoundResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateProduct>>, TError,UpdateProductMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
 ): UseMutationOptions<Awaited<ReturnType<typeof updateProduct>>, TError,UpdateProductMutationVariables, TContext> => {
 
@@ -892,13 +892,13 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
     export type UpdateProductMutationResult = NonNullable<Awaited<ReturnType<typeof updateProduct>>>
     export type UpdateProductMutationBody = BodyType<ProductUpdate>
-    export type UpdateProductMutationError = ErrorType<unknown>
+    export type UpdateProductMutationError = ErrorType<BadRequestResponse | NotFoundResponse>
     export type UpdateProductMutationVariables = {id: number;data: BodyType<ProductUpdate>}
 
     /**
  * @summary Update product
  */
-export const useUpdateProduct = <TError = ErrorType<unknown>,
+export const useUpdateProduct = <TError = ErrorType<BadRequestResponse | NotFoundResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateProduct>>, TError,UpdateProductMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
  ): UseMutationResult<
         Awaited<ReturnType<typeof updateProduct>>,
@@ -1035,7 +1035,7 @@ return customFetch<SourceAccount>(getCreateSourceAccountUrl(),
 
 export const getCreateSourceAccountMutationKey = () => ['createSourceAccount'] as const;
 
-export const getCreateSourceAccountMutationOptions = <TError = ErrorType<unknown>,
+export const getCreateSourceAccountMutationOptions = <TError = ErrorType<BadRequestResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createSourceAccount>>, TError,CreateSourceAccountMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
 ): UseMutationOptions<Awaited<ReturnType<typeof createSourceAccount>>, TError,CreateSourceAccountMutationVariables, TContext> => {
 
@@ -1064,13 +1064,13 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
     export type CreateSourceAccountMutationResult = NonNullable<Awaited<ReturnType<typeof createSourceAccount>>>
     export type CreateSourceAccountMutationBody = BodyType<SourceAccountInput>
-    export type CreateSourceAccountMutationError = ErrorType<unknown>
+    export type CreateSourceAccountMutationError = ErrorType<BadRequestResponse>
     export type CreateSourceAccountMutationVariables = {data: BodyType<SourceAccountInput>}
 
     /**
  * @summary Create source account
  */
-export const useCreateSourceAccount = <TError = ErrorType<unknown>,
+export const useCreateSourceAccount = <TError = ErrorType<BadRequestResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createSourceAccount>>, TError,CreateSourceAccountMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
  ): UseMutationResult<
         Awaited<ReturnType<typeof createSourceAccount>>,
@@ -1124,7 +1124,7 @@ return customFetch<SourceAccount>(getUpdateSourceAccountUrl(id),
 
 export const getUpdateSourceAccountMutationKey = () => ['updateSourceAccount'] as const;
 
-export const getUpdateSourceAccountMutationOptions = <TError = ErrorType<unknown>,
+export const getUpdateSourceAccountMutationOptions = <TError = ErrorType<BadRequestResponse | NotFoundResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateSourceAccount>>, TError,UpdateSourceAccountMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
 ): UseMutationOptions<Awaited<ReturnType<typeof updateSourceAccount>>, TError,UpdateSourceAccountMutationVariables, TContext> => {
 
@@ -1153,13 +1153,13 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
     export type UpdateSourceAccountMutationResult = NonNullable<Awaited<ReturnType<typeof updateSourceAccount>>>
     export type UpdateSourceAccountMutationBody = BodyType<SourceAccountUpdate>
-    export type UpdateSourceAccountMutationError = ErrorType<unknown>
+    export type UpdateSourceAccountMutationError = ErrorType<BadRequestResponse | NotFoundResponse>
     export type UpdateSourceAccountMutationVariables = {id: number;data: BodyType<SourceAccountUpdate>}
 
     /**
  * @summary Update source account
  */
-export const useUpdateSourceAccount = <TError = ErrorType<unknown>,
+export const useUpdateSourceAccount = <TError = ErrorType<BadRequestResponse | NotFoundResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateSourceAccount>>, TError,UpdateSourceAccountMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
  ): UseMutationResult<
         Awaited<ReturnType<typeof updateSourceAccount>>,
@@ -1462,7 +1462,7 @@ return customFetch<Subscription>(getUpdateSubscriptionUrl(id),
 
 export const getUpdateSubscriptionMutationKey = () => ['updateSubscription'] as const;
 
-export const getUpdateSubscriptionMutationOptions = <TError = ErrorType<unknown>,
+export const getUpdateSubscriptionMutationOptions = <TError = ErrorType<BadRequestResponse | NotFoundResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateSubscription>>, TError,UpdateSubscriptionMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
 ): UseMutationOptions<Awaited<ReturnType<typeof updateSubscription>>, TError,UpdateSubscriptionMutationVariables, TContext> => {
 
@@ -1491,13 +1491,13 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
     export type UpdateSubscriptionMutationResult = NonNullable<Awaited<ReturnType<typeof updateSubscription>>>
     export type UpdateSubscriptionMutationBody = BodyType<SubscriptionUpdate>
-    export type UpdateSubscriptionMutationError = ErrorType<unknown>
+    export type UpdateSubscriptionMutationError = ErrorType<BadRequestResponse | NotFoundResponse>
     export type UpdateSubscriptionMutationVariables = {id: number;data: BodyType<SubscriptionUpdate>}
 
     /**
  * @summary Update subscription
  */
-export const useUpdateSubscription = <TError = ErrorType<unknown>,
+export const useUpdateSubscription = <TError = ErrorType<BadRequestResponse | NotFoundResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateSubscription>>, TError,UpdateSubscriptionMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
  ): UseMutationResult<
         Awaited<ReturnType<typeof updateSubscription>>,
@@ -1551,7 +1551,7 @@ return customFetch<Subscription>(getRenewSubscriptionUrl(id),
 
 export const getRenewSubscriptionMutationKey = () => ['renewSubscription'] as const;
 
-export const getRenewSubscriptionMutationOptions = <TError = ErrorType<NotFoundResponse>,
+export const getRenewSubscriptionMutationOptions = <TError = ErrorType<BadRequestResponse | NotFoundResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof renewSubscription>>, TError,RenewSubscriptionMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
 ): UseMutationOptions<Awaited<ReturnType<typeof renewSubscription>>, TError,RenewSubscriptionMutationVariables, TContext> => {
 
@@ -1580,13 +1580,13 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
     export type RenewSubscriptionMutationResult = NonNullable<Awaited<ReturnType<typeof renewSubscription>>>
     export type RenewSubscriptionMutationBody = BodyType<RenewalInput>
-    export type RenewSubscriptionMutationError = ErrorType<NotFoundResponse>
+    export type RenewSubscriptionMutationError = ErrorType<BadRequestResponse | NotFoundResponse>
     export type RenewSubscriptionMutationVariables = {id: number;data: BodyType<RenewalInput>}
 
     /**
  * @summary Renew subscription
  */
-export const useRenewSubscription = <TError = ErrorType<NotFoundResponse>,
+export const useRenewSubscription = <TError = ErrorType<BadRequestResponse | NotFoundResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof renewSubscription>>, TError,RenewSubscriptionMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
  ): UseMutationResult<
         Awaited<ReturnType<typeof renewSubscription>>,
@@ -1640,7 +1640,7 @@ return customFetch<Subscription>(getRevokeSubscriptionUrl(id),
 
 export const getRevokeSubscriptionMutationKey = () => ['revokeSubscription'] as const;
 
-export const getRevokeSubscriptionMutationOptions = <TError = ErrorType<unknown>,
+export const getRevokeSubscriptionMutationOptions = <TError = ErrorType<BadRequestResponse | NotFoundResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof revokeSubscription>>, TError,RevokeSubscriptionMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
 ): UseMutationOptions<Awaited<ReturnType<typeof revokeSubscription>>, TError,RevokeSubscriptionMutationVariables, TContext> => {
 
@@ -1669,13 +1669,13 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
     export type RevokeSubscriptionMutationResult = NonNullable<Awaited<ReturnType<typeof revokeSubscription>>>
     export type RevokeSubscriptionMutationBody = BodyType<RevokeInput> | undefined
-    export type RevokeSubscriptionMutationError = ErrorType<unknown>
+    export type RevokeSubscriptionMutationError = ErrorType<BadRequestResponse | NotFoundResponse>
     export type RevokeSubscriptionMutationVariables = {id: number;data?: BodyType<RevokeInput>}
 
     /**
  * @summary Revoke subscription access
  */
-export const useRevokeSubscription = <TError = ErrorType<unknown>,
+export const useRevokeSubscription = <TError = ErrorType<BadRequestResponse | NotFoundResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof revokeSubscription>>, TError,RevokeSubscriptionMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
  ): UseMutationResult<
         Awaited<ReturnType<typeof revokeSubscription>>,
@@ -1719,7 +1719,7 @@ export const getGetSubscriptionHistoryQueryKey = (id: number,) => {
     }
 
 
-export const getGetSubscriptionHistoryQueryOptions = <TData = Awaited<ReturnType<typeof getSubscriptionHistory>>, TError = ErrorType<unknown>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSubscriptionHistory>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+export const getGetSubscriptionHistoryQueryOptions = <TData = Awaited<ReturnType<typeof getSubscriptionHistory>>, TError = ErrorType<BadRequestResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSubscriptionHistory>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -1738,14 +1738,14 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type GetSubscriptionHistoryQueryResult = NonNullable<Awaited<ReturnType<typeof getSubscriptionHistory>>>
-export type GetSubscriptionHistoryQueryError = ErrorType<unknown>
+export type GetSubscriptionHistoryQueryError = ErrorType<BadRequestResponse | NotFoundResponse>
 
 
 /**
  * @summary Get renewal history
  */
 
-export function useGetSubscriptionHistory<TData = Awaited<ReturnType<typeof getSubscriptionHistory>>, TError = ErrorType<unknown>>(
+export function useGetSubscriptionHistory<TData = Awaited<ReturnType<typeof getSubscriptionHistory>>, TError = ErrorType<BadRequestResponse | NotFoundResponse>>(
  id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSubscriptionHistory>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {

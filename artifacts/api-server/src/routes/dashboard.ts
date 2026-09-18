@@ -10,7 +10,7 @@ const router: IRouter = Router();
 router.get("/dashboard/summary", async (_req, res): Promise<void> => {
   const [customers] = await db.select({ count: count() }).from(customersTable);
   const subscriptions = await listSubscriptionViewsForDashboard();
-  const statusBreakdown = ["active", "expiring", "expired"].map((status) => ({
+  const statusBreakdown = ["active", "expiring", "expired", "archived"].map((status) => ({
     status,
     count: subscriptions.filter((item) => item.status === status).length,
   }));
@@ -51,6 +51,22 @@ router.get("/dashboard/activity", async (req, res): Promise<void> => {
         subscriptionId: history.subscriptionId,
       };
     }),
+    ...subscriptions.map((item) => ({
+      id: `created-${item.id}`,
+      type: "created" as const,
+      title: `${item.customerName} có thuê bao mới`,
+      description: `${item.productName} hết hạn ngày ${item.endDate}`,
+      timestamp: item.createdAt,
+      subscriptionId: item.id,
+    })),
+    ...subscriptions.filter((item) => item.revokedAt !== null).map((item) => ({
+      id: `revoked-${item.id}`,
+      type: "revoked" as const,
+      title: `${item.customerName} đã bị thu hồi`,
+      description: `${item.productName} đã giải phóng tài khoản nguồn`,
+      timestamp: item.revokedAt!,
+      subscriptionId: item.id,
+    })),
     ...subscriptions.filter((item) => item.status === "expiring").slice(0, query.limit ?? 8).map((item) => ({
       id: `expiring-${item.id}`,
       type: "expiring" as const,

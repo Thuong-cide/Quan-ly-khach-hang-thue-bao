@@ -1,5 +1,5 @@
 import { Router, type IRouter } from "express";
-import { asc, eq, sql } from "drizzle-orm";
+import { and, asc, eq, gte, isNull, sql } from "drizzle-orm";
 import { db, productsTable, sourceAccountsTable, subscriptionsTable } from "@workspace/db";
 import {
   CreateProductBody,
@@ -9,7 +9,7 @@ import {
   UpdateProductParams,
   UpdateProductResponse,
 } from "@workspace/api-zod";
-import { numberOrNull, parseId } from "../lib/subscription-utils";
+import { isoToday, numberOrNull, parseId } from "../lib/subscription-utils";
 
 const router: IRouter = Router();
 
@@ -20,7 +20,7 @@ router.get("/products", async (_req, res): Promise<void> => {
       name: productsTable.name,
       defaultDurationDays: productsTable.defaultDurationDays,
       defaultPrice: productsTable.defaultPrice,
-      activeSubscriptions: sql<number>`count(distinct case when ${subscriptionsTable.revokedAt} is null then ${subscriptionsTable.id} end)::int`,
+      activeSubscriptions: sql<number>`count(distinct case when ${subscriptionsTable.revokedAt} is null and ${subscriptionsTable.endDate} >= ${isoToday()} then ${subscriptionsTable.id} end)::int`,
       sourceAccountCount: sql<number>`count(distinct ${sourceAccountsTable.id})::int`,
     })
     .from(productsTable)
@@ -72,8 +72,12 @@ router.patch("/products/:id", async (req, res): Promise<void> => {
     return;
   }
   const [{ activeSubscriptions }] = await db.select({
-    activeSubscriptions: sql<number>`count(*) filter (where ${subscriptionsTable.revokedAt} is null)::int`,
-  }).from(subscriptionsTable).where(eq(subscriptionsTable.productId, id));
+    activeSubscriptions: sql<number>`count(*)::int`,
+  }).from(subscriptionsTable).where(and(
+    eq(subscriptionsTable.productId, id),
+    isNull(subscriptionsTable.revokedAt),
+    gte(subscriptionsTable.endDate, isoToday()),
+  ));
   const [{ sourceAccountCount }] = await db.select({
     sourceAccountCount: sql<number>`count(*)::int`,
   }).from(sourceAccountsTable).where(eq(sourceAccountsTable.productId, id));
