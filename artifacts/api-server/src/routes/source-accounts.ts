@@ -60,6 +60,12 @@ router.post("/source-accounts", async (req, res): Promise<void> => {
     res.status(400).json({ error: parsed.error.message });
     return;
   }
+  const [product] = await db.select({ id: productsTable.id }).from(productsTable)
+    .where(eq(productsTable.id, parsed.data.productId));
+  if (!product) {
+    res.status(400).json({ error: "Product not found" });
+    return;
+  }
   const [account] = await db.insert(sourceAccountsTable).values({
     ...parsed.data,
     expiresAt: parsed.data.expiresAt ? dateOnly(parsed.data.expiresAt) : null,
@@ -76,12 +82,31 @@ router.patch("/source-accounts/:id", async (req, res): Promise<void> => {
     res.status(400).json({ error: parsed.success ? "Invalid source account id" : parsed.error.message });
     return;
   }
-  const [account] = await db.update(sourceAccountsTable).set({
-    ...parsed.data,
-    expiresAt: parsed.data.expiresAt === undefined ? undefined : parsed.data.expiresAt ? dateOnly(parsed.data.expiresAt) : null,
-  }).where(eq(sourceAccountsTable.id, id)).returning();
-  if (!account) {
+  const result = await db.transaction(async (tx) => {
+    const [current] = await tx.select().from(sourceAccountsTable)
+      .where(eq(sourceAccountsTable.id, id))
+      .for("update");
+    if (!current) return { status: "not-found" as const };
+    const used = await tx.select({ id: subscriptionsTable.id })
+      .from(subscriptionsTable)
+      .where(and(eq(subscriptionsTable.sourceAccountId, id), isNull(subscriptionsTable.revokedAt)));
+    if (parsed.data.maxSlots !== undefined && parsed.data.maxSlots < used.length) {
+      return { status: "capacity-too-low" as const, usedSlots: used.length };
+    }
+    await tx.update(sourceAccountsTable).set({
+      ...parsed.data,
+      expiresAt: parsed.data.expiresAt === undefined ? undefined : parsed.data.expiresAt ? dateOnly(parsed.data.expiresAt) : null,
+    }).where(eq(sourceAccountsTable.id, id));
+    return { status: "updated" as const };
+  });
+  if (result.status === "not-found") {
     res.status(404).json({ error: "Source account not found" });
+    return;
+  }
+  if (result.status === "capacity-too-low") {
+    res.status(400).json({
+      error: `Maximum slots cannot be lower than the ${result.usedSlots} slots currently in use`,
+    });
     return;
   }
   res.json(UpdateSourceAccountResponse.parse(await accountView(id)));

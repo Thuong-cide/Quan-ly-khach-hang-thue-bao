@@ -175,6 +175,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Product"
+        "400":
+          $ref: "#/components/responses/BadRequest"
   /products/{id}:
     patch:
       operationId: updateProduct
@@ -195,6 +197,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Product"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
   /source-accounts:
     get:
       operationId: listSourceAccounts
@@ -235,6 +241,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SourceAccount"
+        "400":
+          $ref: "#/components/responses/BadRequest"
   /source-accounts/{id}:
     patch:
       operationId: updateSourceAccount
@@ -255,6 +263,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SourceAccount"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
   /subscriptions:
     get:
       operationId: listSubscriptions
@@ -340,6 +352,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Subscription"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
   /subscriptions/{id}/renew:
     post:
       operationId: renewSubscription
@@ -360,6 +376,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Subscription"
+        "400":
+          $ref: "#/components/responses/BadRequest"
         "404":
           $ref: "#/components/responses/NotFound"
   /subscriptions/{id}/revoke:
@@ -382,6 +400,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Subscription"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
   /subscriptions/{id}/history:
     get:
       operationId: getSubscriptionHistory
@@ -398,6 +420,10 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/RenewalHistory"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
   /integrations/status:
     get:
       operationId: getIntegrationsStatus
